@@ -11,13 +11,17 @@ class RealEstateGame:
     """
     def __init__(self):
         self._board_spaces = {}
+        self._board_rent = {}
         self._players = {}
 
-
-    def create_spaces(self, money, ):
+    def create_spaces(self, money, board_rent):
         """
-
+        Creates a total 25 board spaces for the Real Estate Game
         """
-        if index == 0:
-            # name this GO and space cannot be bought
-        if
+        spaces = 24
+        self._board_rent[0] =
+        for index in range(spaces):
+            self._board_rent[spaces] = rent[index]
+
+
+
