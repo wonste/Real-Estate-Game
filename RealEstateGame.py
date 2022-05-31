@@ -7,13 +7,19 @@
 
 class Player:
 
-    def __init__(self, player_name, account_balance):
+    def __init__(self, player_name, account_balance, player_position):
         self._player_name = player_name
+        self._account_balance = account_balance
+        self._player_position = player_position
 
-        self._owned_properties = []
+    def get_player_account_balance(self):
+        return self._account_balance
 
     def get_player_name(self):
         return self._player_name
+
+    def get_player_position(self):
+        return self._player_position
 
 
 class RealEstateGame:
@@ -24,6 +30,10 @@ class RealEstateGame:
     def __init__(self):
         self._board_spaces = {}
         self._players = {}
+
+    def get_player_via_name(self, user_name):
+        player = Player(user_name)
+        return player
 
     def create_spaces(self, money, rent_array):
         """
@@ -42,23 +52,34 @@ class RealEstateGame:
                 self._board_spaces[index] = rent_array[value]
                 value += 1
 
-    def create_player(self, player_name, account_balance):
+    def create_player(self, user_name, account_balance):
         """
         Create player profiles with given names and starts the players at GO.
         """
         position = 0
-        player_info = {'account balance': account_balance,
-                       'position': position}
+        #player_info = {'account balance': account_balance,
+        #               'position': position}
 
-        self._players[player_name] = player_info
+        #self._players[user_name] = player_info
+        player = Player(user_name, account_balance, position)
+        self._players[user_name] = player
 
-    def get_player_account_balance(self, player_name):
+
+    def get_player_account_balance(self, user_name):
         """
         Obtains specified player name to return the player's account balance.
         """
         for name in self._players:
 
-            if player_name == name:
-                return self._players[player_name]['account balance']
+            if user_name == name:
+                return self._players[user_name]['account balance']
 
-    # def get_player_current_position(self, player_name):
+    def get_player_current_position(self, user_name):
+        """
+        Function returns specified player's current position on the board.
+        """
+        for name in self._players:
+            if user_name == name:
+                return self._players[user_name]['position']
+
+    def buy_space(self, player_name):
