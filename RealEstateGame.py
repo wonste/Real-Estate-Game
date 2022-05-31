@@ -43,12 +43,14 @@ class RealEstateGame:
 
     def create_player(self, player_name, account_balance):
         """
-        Create player profiles
+        Create player profiles with given names and initial balance.
         """
         self._players[player_name] = account_balance
 
     def get_player_account_balance(self, player_name):
-
+        """
+        Obtains specified player name to return the player's account balance.
+        """
         for name in self._players:
             if player_name == name:
                 return self._players[player_name]
