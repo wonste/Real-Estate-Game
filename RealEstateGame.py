@@ -20,6 +20,7 @@ class RealEstateGame:
     """
     Represents the game
     """
+
     def __init__(self):
         self._board_spaces = {}
         self._players = {}
@@ -43,14 +44,21 @@ class RealEstateGame:
 
     def create_player(self, player_name, account_balance):
         """
-        Create player profiles with given names and initial balance.
+        Create player profiles with given names and starts the players at GO.
         """
-        self._players[player_name] = account_balance
+        position = 0
+        player_info = {'account balance': account_balance,
+                       'position': position}
+
+        self._players[player_name] = player_info
 
     def get_player_account_balance(self, player_name):
         """
         Obtains specified player name to return the player's account balance.
         """
         for name in self._players:
+
             if player_name == name:
-                return self._players[player_name]
+                return self._players[player_name]['account balance']
+
+    # def get_player_current_position(self, player_name):
