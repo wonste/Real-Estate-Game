@@ -122,45 +122,60 @@ class RealEstateGame:
 
     def move_player(self, user_name, travel_amount):
         """
-
+        Function takes in the player's name and value they "rolled" the dice to move the player forward on the game
+        board. The location they land in determines whether the player will pay, earn, or idle depending on their
+        conditions. Due to requirements, this is probably the longest and most convoluted method.
         """
         person = self._players[user_name]
         player_balance = person.get_player_account_balance()
         player_position = person.get_player_position()
 
-        for individual in self._players:
+        if player_balance == 0:
+            # If the player's account balance is 0, the method will return immediately without doing anything
+            return
 
-            if user_name == individual:
+        # dice roll ranges from 1 to 6
+        if 6 >= travel_amount >= 1:
+            player_position += travel_amount
 
-                if player_balance == 0:
-                    # If the player's account balance is 0, the method will return immediately without doing anything
-                    return
+            if player_position > 24:
+                # players who pass
+                player_balance += self._board_spaces[0][1]
 
-                # dice roll ranges from 1 to 6
-                if 6 >= travel_amount >= 1:
-                    player_position += travel_amount
+                if player_position == 25:
+                    # reset player position so player is at GO
+                    player_position = 0
 
-                    if player_position > 24:
-                        # players who pass
-                        player_balance += self._board_spaces[0][1]
+                if player_position > 25:
+                    # reduce to be within board space range
+                    player_position -= 25
 
-                        if player_position == 25:
-                            # reset player position so player is at GO
-                            player_position = 0
+                    for board_number in self._board_spaces:
 
-                        if player_position > 25:
-                            # reduce to be within board space range
-                            player_position -= 25
+                        if player_position == board_number:
 
-                            for board_number in self._board_spaces:
+                            if self._board_spaces[board_number][3] is not None:
 
-                                if player_position == board_number:
-                                    # player_balance = player_balance - self._board_spaces[board_number][]
-                                    if self._board_spaces[board_number][3] is None:
+                                if self._board_spaces[board_number][3] is not user_name:
 
+                                    for landlord in self._players:
 
-                else:
-                    return
+                                        if landlord == self._players[self._board_spaces[3]]:
+                                            rent = self._board_spaces[board_number][1]
+
+                                            if player_balance > self._board_spaces[board_number][1]:
+                                                player_balance -= rent
+                                                pay_rent = self.get_player_account_balance(landlord)
+                                                pay_rent += rent
+
+                                            if player_balance <= self._board_spaces[board_number][1]:
+                                                pay_rent = self.get_player_account_balance(landlord)
+                                                pay_rent += player_balance
+                                                player_balance = 0
+                                                self._active_players.remove(user_name)
+
+        else:
+            return
 
     def check_game_over(self):
         """
