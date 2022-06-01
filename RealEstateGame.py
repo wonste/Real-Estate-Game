@@ -2,8 +2,8 @@
 # GitHub username: wonste
 # Date: 06/03/22
 # Description: The program is a very simplified version of Monopoly. The program will only allow for players to roll a
-# single die (from 1 to 6) and moving across the board in a circular motion. There is no Jail but there are properties to
-# be bought and money to be received for passing GO each time.
+# single die (from 1 to 6) and moving across the board in a circular motion. There is no Jail but there are properties
+# to be bought and money to be received for passing GO each time.
 
 class Player:
     """
@@ -22,6 +22,12 @@ class Player:
 
     def get_player_account_balance(self):
         return self._account_balance
+
+    def set_player_position(self, player_position):
+        self._player_position = player_position
+
+    def set_account_balance(self, account_balance):
+        self._account_balance = account_balance
 
 
 class RealEstateGame:
@@ -112,7 +118,7 @@ class RealEstateGame:
 
                             # validate that the board space is purchasable
                             if self._board_spaces[spot][3] is None:
-                                player_balance -= space_purchase
+                                person.set_account_balance = player_balance - space_purchase
                                 self._board_spaces[spot][3] = user_name
                                 return True
                             else:
@@ -148,7 +154,8 @@ class RealEstateGame:
 
                 if player_position > 25:
                     # reduce to be within board space range
-                    player_position -= 25
+                    new_location = player_position - 25
+                    person.set_player_position(new_location)
 
                     for board_number in self._board_spaces:
 
@@ -173,7 +180,6 @@ class RealEstateGame:
                                                 pay_rent += player_balance
                                                 player_balance = 0
                                                 self._active_players.remove(user_name)
-
 
         else:
             return
