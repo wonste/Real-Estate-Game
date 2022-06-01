@@ -118,7 +118,6 @@ class RealEstateGame:
 
         # add the roll to the current position for total
         self._players[user_name][2] += travel_amount
-        print("player moved")
 
         if current_player_position == 25:
             # reset player position so player is at GO and pay player
@@ -134,18 +133,16 @@ class RealEstateGame:
         property_owner = self._board_spaces[self.get_player_current_position(user_name)][3]
 
         if property_owner == user_name:
-            print("player owns it")
+
             return
 
         if property_owner is not None:
-            print("property owner is not none")
 
             space_owner = self._players[property_owner]
             rent = self._board_spaces[board_number][1]
             owner_balance = self.get_player_account_balance(property_owner)
 
             if current_player_balance > self._board_spaces[board_number][1]:
-                print("lalala")
                 # adjust player balance with the new deduction
 
                 self._players[user_name][1] = current_player_balance - rent
