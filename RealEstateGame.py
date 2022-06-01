@@ -43,8 +43,8 @@ class RealEstateGame:
             # establish go
             if index == 0:
                 # [name, rent, purchase, owner]
-                space_list = [index, money, None, None]
-                self._board_spaces[index] = space_list
+                go_space = [index, money, None, None]
+                self._board_spaces[index] = go_space
 
             if index > 0:
                 # [name, rent, purchase, owner] -> 0, 1, 2, 3
@@ -84,12 +84,57 @@ class RealEstateGame:
                 current_position = person.get_player_position()
                 return current_position
 
-        # def buy_space(self, user_name):
+    def buy_space(self, user_name):
         """
         Checks whether current board space has been purchased by another player, if not, current player can purchase
         current board property if they have enough funds. If already owned by someone else, current player will not be
         allowed to purchase the property.
         """
+        person = self._players[user_name]
+        player_balance = person.get_player_account_balance()
+        player_position = person.get_player_position()
+        game_board = self._board_spaces
+
+        # validate that player position is within game board range
+        if player_position in game_board:
+            # validate that player is not at GO
+            if player_position != 0:
+
+                # match board space to player position
+                for spot in game_board:
+
+                    if player_position == spot:
+                        space_purchase = self._board_spaces[spot][2]
+
+                        # validate player balance >= purchase price
+                        if player_balance >= space_purchase:
+
+                            # validate that the board space is purchasable
+                            if self._board_spaces[spot][3] is None:
+                                player_balance -= space_purchase
+                                self._board_spaces[spot][3] = user_name
+                                return True
+                            else:
+                                return False
+            else:
+                return False
+
+    def move_player(self, user_name, travel_amount):
+        person = self._players[user_name]
+        player_balance = person.get_player_account_balance()
+        player_position = person.get_player_position()
+
+        for individual in self._players:
+
+            if user_name == individual:
+
+                if player_balance == 0:
+                    # If the player's account balance is 0, the method will return immediately without doing anything
+                    return
+
+                if 6 > travel_amount > 1:
+                    if player_position <= len(self._board_spaces):
+                        player_position += travel_amount
 
     # def check_game_over(self):
 
@@ -98,3 +143,14 @@ class RealEstateGame:
     # if game is over, the method returns the winning player's name
     # otherwise, method returns winner's name
     # else: method returns an empty string
+
+game = RealEstateGame()
+
+rents = [50, 50, 50, 75, 75, 75, 100, 100, 100, 150, 150, 150, 200, 200, 200, 250, 250, 250, 300, 300, 300, 350, 350, 350]
+game.create_spaces(50, rents)
+
+game.create_player("Player 1", 1000)
+
+
+print(game.buy_space("Player 1"))
+
