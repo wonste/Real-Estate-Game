@@ -6,7 +6,9 @@
 # be bought and money to be received for passing GO each time.
 
 class Player:
+    """
 
+    """
     def __init__(self, player_name, account_balance, player_position):
         self._player_name = player_name
         self._account_balance = account_balance
@@ -57,10 +59,7 @@ class RealEstateGame:
         Create player profiles with given names and starts the players at GO.
         """
         position = 0
-        # player_info = {'account balance': account_balance,
-        #               'position': position}
 
-        # self._players[user_name] = player_info
         self._players[user_name] = Player(user_name, account_balance, position)
 
     def get_player_account_balance(self, user_name):
@@ -120,6 +119,9 @@ class RealEstateGame:
                 return False
 
     def move_player(self, user_name, travel_amount):
+        """
+
+        """
         person = self._players[user_name]
         player_balance = person.get_player_account_balance()
         player_position = person.get_player_position()
@@ -132,25 +134,32 @@ class RealEstateGame:
                     # If the player's account balance is 0, the method will return immediately without doing anything
                     return
 
-                if 6 > travel_amount > 1:
-                    if player_position <= len(self._board_spaces):
-                        player_position += travel_amount
+                # dice roll ranges from 1 to 6
+                if 6 >= travel_amount >= 1:
+                    player_position += travel_amount
+
+                    if player_position > 24:
+                        player_balance += self._board_spaces[0][1]
+                        if player_position == 25:
+                            # reset player position so player is at GO
+                            player_position = 0
+                        if player_position > 25:
+                            # reduce to be within board space range
+                            player_position -= 25
+
+                            for board_number in self._board_spaces:
+
+                                if player_position == board_number:
+
+
+
+
 
     # def check_game_over(self):
 
-    # game is over if all players but one have an account of 0
+        # game is over if all players but one have an account of 0
 
-    # if game is over, the method returns the winning player's name
-    # otherwise, method returns winner's name
-    # else: method returns an empty string
-
-game = RealEstateGame()
-
-rents = [50, 50, 50, 75, 75, 75, 100, 100, 100, 150, 150, 150, 200, 200, 200, 250, 250, 250, 300, 300, 300, 350, 350, 350]
-game.create_spaces(50, rents)
-
-game.create_player("Player 1", 1000)
-
-
-print(game.buy_space("Player 1"))
+        # if game is over, the method returns the winning player's name
+        # otherwise, method returns winner's name
+        # else: method returns an empty string
 
