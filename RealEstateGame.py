@@ -157,32 +157,30 @@ class RealEstateGame:
                     new_location = player_position - 25
                     person.set_player_position(new_location)
 
-                    for board_number in self._board_spaces:
+        for board_number in self._board_spaces:
 
-                        if player_position == board_number:
+            if player_position == board_number:
 
-                            if self._board_spaces[board_number][3] is not None:
+                if self._board_spaces[board_number][3] is not None:
 
-                                if self._board_spaces[board_number][3] is not user_name:
+                    if self._board_spaces[board_number][3] is not user_name:
 
-                                    for landlord in self._players:
+                        for landlord in self._players:
 
-                                        if landlord == self._players[self._board_spaces[3]]:
-                                            rent = self._board_spaces[board_number][1]
+                            if landlord == self._players[self._board_spaces[3]]:
+                                rent = self._board_spaces[board_number][1]
 
-                                            if player_balance > self._board_spaces[board_number][1]:
-                                                player_balance -= rent
-                                                pay_rent = self.get_player_account_balance(landlord)
-                                                pay_rent += rent
+                                if player_balance > self._board_spaces[board_number][1]:
+                                    player_balance -= rent
+                                    pay_rent = self.get_player_account_balance(landlord)
+                                    pay_rent += rent
 
-                                            if player_balance <= self._board_spaces[board_number][1]:
-                                                pay_rent = self.get_player_account_balance(landlord)
-                                                pay_rent += player_balance
-                                                player_balance = 0
-                                                self._active_players.remove(user_name)
+                                if player_balance <= self._board_spaces[board_number][1]:
+                                    pay_rent = self.get_player_account_balance(landlord)
+                                    pay_rent += player_balance
+                                    player_balance = 0
+                                    self._active_players.remove(user_name)
 
-        else:
-            return
 
     def check_game_over(self):
         """
