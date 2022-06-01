@@ -2,7 +2,7 @@
 # GitHub username: wonste
 # Date: 06/03/22
 # Description: The program is a very simplified version of Monopoly. The program will only allow for players to roll a
-# single die (from 1 - 6) and moving across the board in a circular motion. There is no Jail but there are properties to
+# single die (from 1 to 6) and moving across the board in a circular motion. There is no Jail but there are properties to
 # be bought and money to be received for passing GO each time.
 
 class Player:
@@ -32,6 +32,7 @@ class RealEstateGame:
     def __init__(self):
         self._board_spaces = {}
         self._players = {}
+        self._active_players = []
 
     def create_spaces(self, money, rent_array):
         """
@@ -60,6 +61,7 @@ class RealEstateGame:
         """
         position = 0
 
+        self._active_players.append(user_name)
         self._players[user_name] = Player(user_name, account_balance, position)
 
     def get_player_account_balance(self, user_name):
@@ -139,10 +141,13 @@ class RealEstateGame:
                     player_position += travel_amount
 
                     if player_position > 24:
+                        # players who pass
                         player_balance += self._board_spaces[0][1]
+
                         if player_position == 25:
                             # reset player position so player is at GO
                             player_position = 0
+
                         if player_position > 25:
                             # reduce to be within board space range
                             player_position -= 25
@@ -150,16 +155,21 @@ class RealEstateGame:
                             for board_number in self._board_spaces:
 
                                 if player_position == board_number:
+                                    # player_balance = player_balance - self._board_spaces[board_number][]
+                                    if self._board_spaces[board_number][3] is None:
 
 
+                else:
+                    return
 
+    def check_game_over(self):
+        """
+        Checks every player's balance to see if the game is done. If there is only 1 player with a balance not at 0,
+        the game is over and that player is declared the winner. If there's no winner, the function will return an empty
+        string.
+        """
 
-
-    # def check_game_over(self):
-
-        # game is over if all players but one have an account of 0
-
-        # if game is over, the method returns the winning player's name
-        # otherwise, method returns winner's name
-        # else: method returns an empty string
-
+        if len(self._active_players) == 1:
+            return self._active_players
+        else:
+            return ""
