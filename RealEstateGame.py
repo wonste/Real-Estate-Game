@@ -5,29 +5,26 @@
 # single die (from 1 to 6) and moving across the board in a circular motion. There is no Jail but there are properties
 # to be bought and money to be received for passing GO each time.
 
-class Player:
-    """
-
-    """
-    def __init__(self, player_name, account_balance, player_position):
-        self._player_name = player_name
-        self._account_balance = account_balance
-        self._player_position = player_position
-
-    def get_player_name(self):
-        return self._player_name
-
-    def get_player_position(self):
-        return self._player_position
-
-    def get_player_account_balance(self):
-        return self._account_balance
-
-    def set_player_position(self, player_position):
-        self._player_position = player_position
-
-    def set_account_balance(self, account_balance):
-        self._account_balance = account_balance
+# class Player:
+#     def __init__(self, player_name, account_balance, player_position):
+#         self._player_name = player_name
+#         self._account_balance = account_balance
+#         self._player_position = player_position
+#
+#     def get_player_name(self):
+#         return self._player_name
+#
+#     def get_player_position(self):
+#         return self._player_position
+#
+#     def get_player_account_balance(self):
+#         return self._account_balance
+#
+#     def set_player_position(self, player_position):
+#         self._player_position = player_position
+#
+#     def set_account_balance(self, account_balance):
+#         self._account_balance = account_balance
 
 
 class RealEstateGame:
@@ -68,7 +65,9 @@ class RealEstateGame:
         position = 0
 
         self._active_players.append(user_name)
-        self._players[user_name] = Player(user_name, account_balance, position)
+        # 0, 1, 2
+        player_info = [user_name, account_balance, position]
+        self._players[user_name] = player_info
 
     def get_player_account_balance(self, user_name):
         """
@@ -77,8 +76,7 @@ class RealEstateGame:
         for name in self._players:
 
             if user_name == name:
-                person = self._players[user_name]
-                total_funds = person.get_player_account_balance()
+                total_funds = self._players[user_name][1]
                 return total_funds
 
     def get_player_current_position(self, user_name):
@@ -87,8 +85,7 @@ class RealEstateGame:
         """
         for name in self._players:
             if user_name == name:
-                person = self._players[user_name]
-                current_position = person.get_player_position()
+                current_position = self._players[user_name][3]
                 return current_position
 
     def buy_space(self, user_name):
@@ -97,9 +94,8 @@ class RealEstateGame:
         current board property if they have enough funds. If already owned by someone else, current player will not be
         allowed to purchase the property.
         """
-        person = self._players[user_name]
-        player_balance = person.get_player_account_balance()
-        player_position = person.get_player_position()
+        current_player_balance = self.get_player_account_balance(user_name)
+        player_position = self._players[user_name][3]
         game_board = self._board_spaces
 
         # validate that player position is within game board range
@@ -114,11 +110,11 @@ class RealEstateGame:
                         space_purchase = self._board_spaces[spot][2]
 
                         # validate player balance >= purchase price
-                        if player_balance >= space_purchase:
+                        if current_player_balance >= space_purchase:
 
                             # validate that the board space is purchasable
                             if self._board_spaces[spot][3] is None:
-                                person.set_account_balance = player_balance - space_purchase
+                                self._players[user_name][1] = current_player_balance - space_purchase
                                 self._board_spaces[spot][3] = user_name
                                 return True
                             else:
@@ -132,9 +128,8 @@ class RealEstateGame:
         board. The location they land in determines whether the player will pay, earn, or idle depending on their
         conditions. Due to requirements, this is probably the longest and most convoluted method.
         """
-        person = self._players[user_name]
-        player_balance = person.get_player_account_balance()
-        player_position = person.get_player_position()
+        current_player_balance = self.get_player_account_balance(user_name)
+        player_position = self._players[user_name][3]
 
         if player_balance == 0:
             # If the player's account balance is 0, the method will return immediately without doing anything
@@ -146,7 +141,7 @@ class RealEstateGame:
 
             if player_position > 24:
                 # players who pass
-                player_balance += self._board_spaces[0][1]
+                self._players[user_name][1] += self._board_spaces[0][1]
 
                 if player_position == 25:
                     # reset player position so player is at GO
@@ -154,8 +149,7 @@ class RealEstateGame:
 
                 if player_position > 25:
                     # reduce to be within board space range
-                    new_location = player_position - 25
-                    person.set_player_position(new_location)
+                    player_position = player_position - 25
 
         for board_number in self._board_spaces:
 
@@ -167,20 +161,27 @@ class RealEstateGame:
 
                         for landlord in self._players:
 
-                            if landlord == self._players[self._board_spaces[3]]:
+                            if landlord == self._players[self._board_spaces[board_number][3]]:
                                 rent = self._board_spaces[board_number][1]
 
-                                if player_balance > self._board_spaces[board_number][1]:
-                                    player_balance -= rent
-                                    pay_rent = self.get_player_account_balance(landlord)
-                                    pay_rent += rent
+                                if current_player_balance > self._board_spaces[board_number][1]:
 
-                                if player_balance <= self._board_spaces[board_number][1]:
-                                    pay_rent = self.get_player_account_balance(landlord)
-                                    pay_rent += player_balance
+                                    # adjust player balance with the new deduction
+                                    self._players[user_name][1] = current_player_balance - rent
+
+                                    # pay the property owner rent
+                                    property_owner = self.get_player_account_balance(landlord)
+
+                                    # routing number so the check hits the owner's account
+                                    self._players[landlord][1] = property_owner + rent
+
+                                if current_player_balance <= self._board_spaces[board_number][1]:
+
+                                    property_owner = self.get_player_account_balance(landlord)
+
+                                    self._players[landlord][1] = property_owner + player_balance
                                     player_balance = 0
                                     self._active_players.remove(user_name)
-
 
     def check_game_over(self):
         """
