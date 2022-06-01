@@ -85,7 +85,7 @@ class RealEstateGame:
         """
         for name in self._players:
             if user_name == name:
-                current_position = self._players[user_name][3]
+                current_position = self._players[user_name][2]
                 return current_position
 
     def buy_space(self, user_name):
@@ -95,7 +95,7 @@ class RealEstateGame:
         allowed to purchase the property.
         """
         current_player_balance = self.get_player_account_balance(user_name)
-        player_position = self._players[user_name][3]
+        player_position = self._players[user_name][2]
         game_board = self._board_spaces
 
         # validate that player position is within game board range
@@ -129,31 +129,33 @@ class RealEstateGame:
         conditions. Due to requirements, this is probably the longest and most convoluted method.
         """
         current_player_balance = self.get_player_account_balance(user_name)
-        player_position = self._players[user_name][3]
+        current_player_position = self.get_player_current_position(user_name)
 
-        if player_balance == 0:
+        if current_player_balance == 0:
             # If the player's account balance is 0, the method will return immediately without doing anything
             return
 
         # dice roll ranges from 1 to 6
         if 6 <= travel_amount >= 1:
-            player_position += travel_amount
+            # add the roll to the current position for total
+            self._players[user_name][2] += travel_amount
 
-            if player_position > 24:
+            # for players at the end of the game board
+            if current_player_position > 24:
                 # players who pass
                 self._players[user_name][1] += self._board_spaces[0][1]
 
-                if player_position == 25:
+                if current_player_position == 25:
                     # reset player position so player is at GO
-                    player_position = 0
+                    self._players[user_name][2] = 0
 
-                if player_position > 25:
+                if current_player_position > 25:
                     # reduce to be within board space range
-                    player_position = player_position - 25
+                    self._players[user_name][2] = current_player_position - 25
 
         for board_number in self._board_spaces:
 
-            if player_position == board_number:
+            if current_player_position == board_number:
 
                 if self._board_spaces[board_number][3] is not None:
 
@@ -179,8 +181,8 @@ class RealEstateGame:
 
                                     property_owner = self.get_player_account_balance(landlord)
 
-                                    self._players[landlord][1] = property_owner + player_balance
-                                    player_balance = 0
+                                    self._players[landlord][1] = property_owner + current_player_balance
+                                    self._players[user_name][1] = 0
                                     self._active_players.remove(user_name)
 
     def check_game_over(self):
@@ -194,3 +196,4 @@ class RealEstateGame:
             return self._active_players
         else:
             return ""
+
