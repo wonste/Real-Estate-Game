@@ -5,33 +5,10 @@
 # single die (from 1 to 6) and moving across the board in a circular motion. There is no Jail but there are properties
 # to be bought and money to be received for passing GO each time.
 
-# class Player:
-#     def __init__(self, player_name, account_balance, player_position):
-#         self._player_name = player_name
-#         self._account_balance = account_balance
-#         self._player_position = player_position
-#
-#     def get_player_name(self):
-#         return self._player_name
-#
-#     def get_player_position(self):
-#         return self._player_position
-#
-#     def get_player_account_balance(self):
-#         return self._account_balance
-#
-#     def set_player_position(self, player_position):
-#         self._player_position = player_position
-#
-#     def set_account_balance(self, account_balance):
-#         self._account_balance = account_balance
-
-
 class RealEstateGame:
     """
-    Represents the game
+    Represents the game which is a simplified version of Monopoly.
     """
-
     def __init__(self):
         self._board_spaces = {}
         self._players = {}
@@ -63,7 +40,7 @@ class RealEstateGame:
         Create player profiles with given names and starts the players at GO.
         """
         position = 0
-
+        # compile a list of all players participating
         self._active_players.append(user_name)
         # 0, 1, 2
         player_info = [user_name, account_balance, position]
@@ -153,6 +130,7 @@ class RealEstateGame:
                     # reduce to be within board space range
                     self._players[user_name][2] = current_player_position - 25
 
+        # this used to be more nested, but I couldn't figure out a cleaner way to do this............
         for board_number in self._board_spaces:
 
             if current_player_position == board_number:
@@ -161,6 +139,7 @@ class RealEstateGame:
 
                     if self._board_spaces[board_number][3] is not user_name:
 
+                        # look for the owner in the dictionary
                         for landlord in self._players:
 
                             if landlord == self._players[self._board_spaces[board_number][3]]:
@@ -183,17 +162,16 @@ class RealEstateGame:
 
                                     self._players[landlord][1] = property_owner + current_player_balance
                                     self._players[user_name][1] = 0
+                                    # remove player from active player list since they are now inactive
                                     self._active_players.remove(user_name)
 
     def check_game_over(self):
         """
-        Checks every player's balance to see if the game is done. If there is only 1 player with a balance not at 0,
-        the game is over and that player is declared the winner. If there's no winner, the function will return an empty
-        string.
+        Checks list of active players where players have balances of more than 0. If the list has only one player left,
+        the game is over. If there are more than 1 player still in the game, the function returns an empty string.
         """
 
         if len(self._active_players) == 1:
             return self._active_players
         else:
             return ""
-
