@@ -135,7 +135,7 @@ class RealEstateGame:
             return
 
         # dice roll ranges from 1 to 6
-        if 6 >= travel_amount >= 1:
+        if 6 <= travel_amount >= 1:
             player_position += travel_amount
 
             if player_position > 24:
@@ -173,6 +173,7 @@ class RealEstateGame:
                                                 pay_rent += player_balance
                                                 player_balance = 0
                                                 self._active_players.remove(user_name)
+
 
         else:
             return
