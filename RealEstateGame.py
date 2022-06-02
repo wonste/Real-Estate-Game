@@ -155,12 +155,11 @@ class RealEstateGame:
                 self._players[user_name][1] = 0
                 # remove player from active player list since they are now inactive
                 self._active_players.remove(user_name)
-                counter = 0
+
                 # since player is now bankrupt, time to remove their properties
-                for ownership in range(len(self._board_spaces)):
-                    if ownership == self._board_spaces[counter][3]:
-                        self._board_spaces[counter][3] = None
-                        counter += 1
+                for ownership in range(1, 25):
+                    if user_name == self._board_spaces[ownership][3]:
+                        self._board_spaces[ownership][3] = None
 
     def check_game_over(self):
         """
