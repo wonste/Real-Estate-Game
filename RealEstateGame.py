@@ -136,7 +136,6 @@ class RealEstateGame:
             return
 
         if property_owner is not None:
-
             space_owner = self._players[property_owner]
             rent = self._board_spaces[board_number][1]
             owner_balance = self.get_player_account_balance(property_owner)
@@ -156,14 +155,19 @@ class RealEstateGame:
                 self._players[user_name][1] = 0
                 # remove player from active player list since they are now inactive
                 self._active_players.remove(user_name)
+                counter = 0
+                # since player is now bankrupt, time to remove their properties
+                for ownership in range(len(self._board_spaces)):
+                    if ownership == self._board_spaces[counter][3]:
+                        self._board_spaces[counter][3] = None
+                        counter += 1
 
     def check_game_over(self):
         """
         Checks list of active players where players have balances of more than 0. If the list has only one player left,
         the game is over. If there are more than 1 player still in the game, the function returns an empty string.
         """
-
         if len(self._active_players) == 1:
-            return self._active_players
+            return self._active_players[0]
         else:
             return ""
