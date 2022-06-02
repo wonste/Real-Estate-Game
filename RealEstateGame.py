@@ -133,7 +133,6 @@ class RealEstateGame:
         property_owner = self._board_spaces[self.get_player_current_position(user_name)][3]
 
         if property_owner == user_name:
-
             return
 
         if property_owner is not None:
@@ -149,7 +148,6 @@ class RealEstateGame:
 
                 # pay the property owner rent
                 # routing number so the check hits the owner's account
-
                 space_owner[1] = owner_balance + rent
 
             if current_player_balance <= self._board_spaces[board_number][1]:
