@@ -107,7 +107,7 @@ class RealEstateGame:
         current_player_balance = self.get_player_account_balance(user_name)
         go_fund = self._board_spaces[0][1]
 
-        if self.get_player_current_position(user_name) == 0:
+        if current_player_balance == 0:
             # If the player's account balance is 0, the method will return immediately without doing anything
             return
 
@@ -117,7 +117,7 @@ class RealEstateGame:
 
         # add the roll to the current position for total
         self._players[user_name][2] += travel_amount
-        current_player_position = self._players[user_name][2]
+        current_player_position = self.get_player_current_position(user_name)
 
         if current_player_position == 25:
             # reset player position so player is at GO and pay player
