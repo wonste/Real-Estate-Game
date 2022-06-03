@@ -105,10 +105,9 @@ class RealEstateGame:
         conditions. Due to requirements, this is probably the longest and most convoluted method.
         """
         current_player_balance = self.get_player_account_balance(user_name)
-        current_player_position = self.get_player_current_position(user_name)
         go_fund = self._board_spaces[0][1]
 
-        if current_player_balance == 0:
+        if self.get_player_current_position(user_name) == 0:
             # If the player's account balance is 0, the method will return immediately without doing anything
             return
 
