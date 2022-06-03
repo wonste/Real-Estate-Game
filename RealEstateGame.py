@@ -118,6 +118,7 @@ class RealEstateGame:
 
         # add the roll to the current position for total
         self._players[user_name][2] += travel_amount
+        current_player_position = self._players[user_name][2]
 
         if current_player_position == 25:
             # reset player position so player is at GO and pay player
