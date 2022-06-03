@@ -85,8 +85,8 @@ class RealEstateGame:
                     if player_position == spot:
                         space_purchase = self._board_spaces[spot][2]
 
-                        # validate player balance >= purchase price
-                        if current_player_balance >= space_purchase:
+                        # validate player balance > purchase price
+                        if current_player_balance > space_purchase:
 
                             # validate that the board space is purchasable
                             if self._board_spaces[spot][3] is None:
